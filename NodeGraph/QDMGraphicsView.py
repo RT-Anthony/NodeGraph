@@ -23,9 +23,9 @@ class QDMGraphicsView(QGraphicsView):
         if event.button() == Qt.MiddleButton:
             self.middleMouseButtonPress(event)
         elif event.button() == Qt.LeftButton:
-            pass
+            self.leftMouseButtonPress(event)
         elif event.button() == Qt.RightButton:
-            pass
+            self.rightMouseButtonPress(event)
         else:
             super().mousePressEvent(event)
 
@@ -33,9 +33,9 @@ class QDMGraphicsView(QGraphicsView):
         if event.button() == Qt.MiddleButton:
             self.middleMouseButtonRelease(event)
         elif event.button() == Qt.LeftButton:
-            pass
+            self.leftMouseButtonRelease(event)
         elif event.button() == Qt.RightButton:
-            pass
+            self.rightMouseButtonRelease(event)
         else:
             super().mouseReleaseEvent(event)
 
@@ -53,3 +53,25 @@ class QDMGraphicsView(QGraphicsView):
                                    Qt.LeftButton, event.buttons() & ~Qt.LeftButton, event.modifiers()) # Need to & ~lbutton to process proper actual state of left mouse button
         super().mouseReleaseEvent(releaseEvent)
         self.setDragMode(QGraphicsView.NoDrag)
+
+    def leftMouseButtonPress(self, event):
+        return super().mousePressEvent(event)
+
+    def rightMouseButtonPress(self, event):
+        return super().mousePressEvent(event)
+
+    def leftMouseButtonRelease(self, event):
+        return super().mousePressEvent(event)
+
+    def rightMouseButtonRelease(self, event):
+        return super().mousePressEvent(event)
+
+    def wheelEvent(cls, self, event):
+        # calculate zoom factor
+
+        # store scenen position
+
+        # set scene scale
+
+        # translate view
+        return super().wheelEvent(self, event)
