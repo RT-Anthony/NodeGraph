@@ -13,11 +13,18 @@ class QDMGraphicsView(QGraphicsView):
 
         self.setScene(self.grScene)
 
+        self.zoomFactor = 1.25
+        self.zoomClamp = False
+        self.zoom = 10
+        self.zoomStep = 1
+        self.zoomRange = [0, 10]
+
     def initUI(self):
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MiddleButton:
@@ -66,12 +73,20 @@ class QDMGraphicsView(QGraphicsView):
     def rightMouseButtonRelease(self, event):
         return super().mousePressEvent(event)
 
-    def wheelEvent(cls, self, event):
+    def wheelEvent(self, event):
         # calculate zoom factor
+        zoomOutFactor = 1 / self.zoomFactor
 
-        # store scenen position
+        # calculate zoom
+        if event.angleDelta().y() > 0:
+            zoomFactor = self.zoomFactor
+            self.zoom += self.zoomStep
+        else:
+            zoomFactor = zoomOutFactor
+            self.zoom -= self.zoomStep
 
         # set scene scale
+        self.scale(zoomFactor, zoomFactor)
 
         # translate view
-        return super().wheelEvent(self, event)
+        # return super().wheelEvent(event)
