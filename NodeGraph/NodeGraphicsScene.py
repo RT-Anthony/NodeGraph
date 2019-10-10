@@ -27,6 +27,9 @@ class NodeGraphicsScene(QGraphicsScene):
 
         self.setBackgroundBrush(self._color_background)
 
+    def setScene(self, width, height):
+        self.setSceneRect(self.scene_width / 2, self.scene_height / 2, self.scene_width, self.scene_height)
+
     def drawBackground(self, painter, rect):
         super().drawBackground(painter, rect)
 
