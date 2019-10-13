@@ -1,3 +1,4 @@
+from NodeGraphicsScene import NodeGraphicsScene
 class NodeScene(object):
     """description of class"""
 
@@ -11,7 +12,8 @@ class NodeScene(object):
         self.initUI()
 
     def initUI(self):
-        pass
+        self.grScene = NodeGraphicsScene(self)
+        self.grScene.setGrScene(self.scene_width, self.scene_height)
 
     def addNode(self, node):
         self.nodes.append(node)

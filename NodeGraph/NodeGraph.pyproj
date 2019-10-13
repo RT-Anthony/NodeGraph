@@ -21,11 +21,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Node.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NodeEditorWindow.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeGraph.py" />
     <Compile Include="NodeGraphicsScene.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeScene.py" />
+    <Compile Include="QDMGraphicsNode.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QDMGraphicsView.py">
