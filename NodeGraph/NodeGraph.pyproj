@@ -35,10 +35,16 @@
     <Compile Include="QDMGraphicsNode.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="QDMGraphicsSocket.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="QDMGraphicsView.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QDMNodeContentWidget.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Socket.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -25,7 +25,7 @@ class NodeEditorWindow(QWidget):
         # create graphics scene
         self.scene = NodeScene()
         
-        node = Node(self.scene, "My Awesome Node")
+        node = Node(self.scene, "My Awesome Node", inputs=[1,2,3], outputs=[1])
 
         # create graphics view
         self.view = QDMGraphicsView(self.scene.grScene, self)
