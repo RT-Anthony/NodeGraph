@@ -1,6 +1,6 @@
 from QDMGraphicsNode import QDMGraphicsNode
 from QDMNodeContentWidget import QDMNodeContentWidget
-from Socket import *
+from NodeSocket import *
 
 class Node(object):
     """description of class"""
@@ -47,5 +47,10 @@ class Node(object):
             # start from top
             y = self.grNode.title_height + self.grNode._padding + self.grNode.edge_size + index * self.socket_spacing
 
-        return x, y
+        return [x, y]
+
+    def updateConnectedEdges(self):
+        for socket in self.inputs + self.outputs:
+            if socket.hasEdge():
+                socket.edge.updatePositions()
 

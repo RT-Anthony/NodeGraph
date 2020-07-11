@@ -32,6 +32,13 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         painter.setBrush(Qt.NoBrush)
         painter.drawPath(self.path())
 
+    def setSource(self, x, y):
+        self.posSource = [x, y]
+
+    def setDestination(self, x, y):
+        self.posDestination = [x, y]
+
+
     def updatePath(self):
         """ Will handle drawing QPainterPath from Point A to B """
         raise NotImplemented("This method has to be overriden in a child class")

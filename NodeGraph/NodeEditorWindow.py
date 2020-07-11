@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from NodeScene import NodeScene
 from QDMGraphicsView import QDMGraphicsView
 from Node import Node
-from NodeEdge import Edge
+from NodeEdge import Edge, EDGE_TYPE_BEZIER
 
 class NodeEditorWindow(QWidget):
     """description of class"""
@@ -45,9 +45,12 @@ class NodeEditorWindow(QWidget):
         node2.setPos(-75, 0)
         node3.setPos(200, -150)
 
-        edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[0])
-        edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[0], type=2)
+        edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[0], edge_type=EDGE_TYPE_BEZIER)
+        edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[0], edge_type=EDGE_TYPE_BEZIER)
 
+        node1.updateConnectedEdges()
+        node2.updateConnectedEdges()
+        node3.updateConnectedEdges()
 
     def loadStylesheet(self, filename):
         print('Style loading: ', filename)
