@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 
 
 from QDMGraphicsSocket import QDMGraphicsSocket
+from QDMGraphicsEdge import QDMGraphicsEdge
 from NodeEdge import QDMGraphicsEdge
 
 
@@ -17,10 +18,9 @@ DEBUG = True
 
 
 class QDMGraphicsView(QGraphicsView):
-    """description of class"""
-    def __init__(self, scene, parent=None):
+    def __init__(self, grScene, parent=None):
         super().__init__(parent)
-        self.grScene = scene
+        self.grScene = grScene
 
         self.initUI()
 
@@ -28,18 +28,23 @@ class QDMGraphicsView(QGraphicsView):
 
         self.mode = MODE_NOOP
 
-        self.zoomFactor = 1.25
+        self.zoomInFactor = 1.25
         self.zoomClamp = True
         self.zoom = 10
         self.zoomStep = 1
         self.zoomRange = [0, 10]
 
+
     def initUI(self):
         self.setRenderHints(QPainter.Antialiasing | QPainter.HighQualityAntialiasing | QPainter.TextAntialiasing | QPainter.SmoothPixmapTransform)
+
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
+
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MiddleButton:
@@ -61,20 +66,24 @@ class QDMGraphicsView(QGraphicsView):
         else:
             super().mouseReleaseEvent(event)
 
+
     def middleMouseButtonPress(self, event):
         releaseEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),
                                    Qt.LeftButton, Qt.NoButton, event.modifiers())
         super().mouseReleaseEvent(releaseEvent)
         self.setDragMode(QGraphicsView.ScrollHandDrag)
-        pressEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
-                                 Qt.LeftButton, event.buttons() | Qt.LeftButton, event.modifiers())
-        super().mousePressEvent(pressEvent)
+        fakeEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
+                                Qt.LeftButton, event.buttons() | Qt.LeftButton, event.modifiers())
+        super().mousePressEvent(fakeEvent)
+
+
 
     def middleMouseButtonRelease(self, event):
-        releaseEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
-                                   Qt.LeftButton, event.buttons() & ~Qt.LeftButton, event.modifiers()) # Need to & ~lbutton to process proper actual state of left mouse button
-        super().mouseReleaseEvent(releaseEvent)
+        fakeEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
+                                Qt.LeftButton, event.buttons() & ~Qt.LeftButton, event.modifiers())
+        super().mouseReleaseEvent(fakeEvent)
         self.setDragMode(QGraphicsView.NoDrag)
+
 
     def leftMouseButtonPress(self, event):
         # get item which we clicked on
@@ -98,6 +107,21 @@ class QDMGraphicsView(QGraphicsView):
         super().mousePressEvent(event)
 
 
+    def leftMouseButtonRelease(self, event):
+        # get item which we release mouse button on
+        item = self.getItemAtClick(event)
+
+        # logic
+        if self.mode == MODE_EDGE_DRAG:
+            if self.distanceBetweenClickAndReleaseIsOff(event):
+                res = self.edgeDragEnd(item)
+                if res: return
+
+
+        super().mouseReleaseEvent(event)
+
+
+
     def rightMouseButtonPress(self, event):
         super().mousePressEvent(event)
 
@@ -115,42 +139,19 @@ class QDMGraphicsView(QGraphicsView):
                 print('  Edges:')
                 for edge in self.grScene.scene.edges: print('    ', edge)
 
-    def leftMouseButtonRelease(self, event):
-        # get item which we release mouse button on
-        item = self.getItemAtClick(event)
 
-        # logic
-        if self.mode == MODE_EDGE_DRAG:
-            if self.distanceBetweenClickAndReleaseIsOff(event):
-                res = self.edgeDragEnd(item)
-                if res: return
-
-
+    def rightMouseButtonRelease(self, event):
         super().mouseReleaseEvent(event)
 
 
-    def rightMouseButtonRelease(self, event):
-        super().mousePressEvent(event)
+    def mouseMoveEvent(self, event):
+        if self.mode == MODE_EDGE_DRAG:
+            pos = self.mapToScene(event.pos())
+            self.dragEdge.grEdge.setDestination(pos.x(), pos.y())
+            self.dragEdge.grEdge.update()
 
-    def wheelEvent(self, event):
-        # calculate zoom factor
-        zoomOutFactor = 1 / self.zoomFactor
+        super().mouseMoveEvent(event)
 
-        # calculate zoom
-        if event.angleDelta().y() > 0:
-            zoomFactor = self.zoomFactor
-            self.zoom += self.zoomStep
-        else:
-            zoomFactor = zoomOutFactor
-            self.zoom -= self.zoomStep
-
-        clamped = False
-        if self.zoom < self.zoomRange[0]: self.zoom, clamped = self.zoomRange[0], True
-        if self.zoom > self.zoomRange[-1]: self.zoom, clamped = self.zoomRange[-1], True
-
-        # set scene scale
-        if not clamped or self.zoomClamp is False:
-            self.scale(zoomFactor, zoomFactor)
 
     def getItemAtClick(self, event):
         """ return the object on which we've clicked/release mouse button """
@@ -158,19 +159,42 @@ class QDMGraphicsView(QGraphicsView):
         obj = self.itemAt(pos)
         return obj
 
+
     def edgeDragStart(self, item):
         if DEBUG: print('View::edgeDragStart ~ Start dragging edge')
-        if DEBUG: print('View::edgeDragStart ~   assign Start Socket')
+        if DEBUG: print('View::edgeDragStart ~   assign Start Socket to:', item.socket)
+        self.previousEdge = item.socket.edge
+        self.last_start_socket = item.socket
+        self.dragEdge = Edge(self.grScene.scene, item.socket, None, EDGE_TYPE_BEZIER)
+        if DEBUG: print('View::edgeDragStart ~   dragEdge:', self.dragEdge)
+
 
     def edgeDragEnd(self, item):
         """ return True if skip the rest of the code """
         self.mode = MODE_NOOP
-        if DEBUG: print('View::edgeDragEnd ~ End dragging edge')
 
         if type(item) is QDMGraphicsSocket:
-            print('  assign End Socket')
-            if DEBUG: print('View::edgeDragEnd ~   assign End Socket')
+            if DEBUG: print('View::edgeDragEnd ~   previous edge:', self.previousEdge)
+            if item.socket.hasEdge():
+                item.socket.edge.remove()
+            if DEBUG: print('View::edgeDragEnd ~   assign End Socket', item.socket)
+            if self.previousEdge is not None: self.previousEdge.remove()
+            if DEBUG: print('View::edgeDragEnd ~  previous edge removed')
+            self.dragEdge.start_socket = self.last_start_socket
+            self.dragEdge.end_socket = item.socket
+            self.dragEdge.start_socket.setConnectedEdge(self.dragEdge)
+            self.dragEdge.end_socket.setConnectedEdge(self.dragEdge)
+            if DEBUG: print('View::edgeDragEnd ~  reassigned start & end sockets to drag edge')
+            self.dragEdge.updatePositions()
             return True
+
+        if DEBUG: print('View::edgeDragEnd ~ End dragging edge')
+        self.dragEdge.remove()
+        self.dragEdge = None
+        if DEBUG: print('View::edgeDragEnd ~ about to set socket to previous edge:', self.previousEdge)
+        if self.previousEdge is not None:
+            self.previousEdge.start_socket.edge = self.previousEdge
+        if DEBUG: print('View::edgeDragEnd ~ everything done.')
 
         return False
 
@@ -183,5 +207,24 @@ class QDMGraphicsView(QGraphicsView):
         return (dist_scene.x()*dist_scene.x() + dist_scene.y()*dist_scene.y()) > edge_drag_threshold_sq
 
 
-        # translate view
-        # return super().wheelEvent(event)
+
+    def wheelEvent(self, event):
+        # calculate our zoom Factor
+        zoomOutFactor = 1 / self.zoomInFactor
+
+        # calculate zoom
+        if event.angleDelta().y() > 0:
+            zoomFactor = self.zoomInFactor
+            self.zoom += self.zoomStep
+        else:
+            zoomFactor = zoomOutFactor
+            self.zoom -= self.zoomStep
+
+
+        clamped = False
+        if self.zoom < self.zoomRange[0]: self.zoom, clamped = self.zoomRange[0], True
+        if self.zoom > self.zoomRange[1]: self.zoom, clamped = self.zoomRange[1], True
+
+        # set scene scale
+        if not clamped or self.zoomClamp is False:
+            self.scale(zoomFactor, zoomFactor)

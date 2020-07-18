@@ -1,11 +1,10 @@
-from NodeGraphicsEdge import *
+from QDMGraphicsEdge import *
 
 
 EDGE_TYPE_DIRECT = 1
 EDGE_TYPE_BEZIER = 2
 
-DEBUG = True
-
+DEBUG = False
 
 class Edge:
     def __init__(self, scene, start_socket, end_socket, edge_type=EDGE_TYPE_DIRECT):
@@ -21,12 +20,13 @@ class Edge:
 
         self.grEdge = QDMGraphicsEdgeDirect(self) if edge_type == EDGE_TYPE_DIRECT else QDMGraphicsEdgeBezier(self)
 
-
+        self.updatePositions()
+        if DEBUG: print("Edge: ", self.grEdge.posSource, "to", self.grEdge.posDestination)
         self.scene.grScene.addItem(self.grEdge)
+        self.scene.addEdge(self)
 
     def __str__(self):
         return "<Edge %s..%s>" % (hex(id(self))[2:5], hex(id(self))[-3:])
-
 
 
     def updatePositions(self):
@@ -39,8 +39,8 @@ class Edge:
             end_pos[0] += self.end_socket.node.grNode.pos().x()
             end_pos[1] += self.end_socket.node.grNode.pos().y()
             self.grEdge.setDestination(*end_pos)
-        if DEBUG: print(" SS:", self.start_socket)
-        if DEBUG: print(" ES:", self.end_socket)
+        else:
+            self.grEdge.setDestination(*source_pos)
         self.grEdge.update()
 
 

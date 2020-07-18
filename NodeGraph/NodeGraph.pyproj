@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="NodeGraphicsEdge.py">
+    <Compile Include="QDMGraphicsEdge.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeEdge.py">
@@ -34,11 +34,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeGraph.py" />
-    <Compile Include="NodeGraphicsScene.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="NodeScene.py" />
     <Compile Include="QDMGraphicsNode.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="QDMGraphicsScene.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QDMGraphicsSocket.py">

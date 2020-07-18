@@ -1,4 +1,6 @@
-from NodeGraphicsScene import NodeGraphicsScene
+from QDMGraphicsScene import QDMGraphicsScene
+
+
 class NodeScene(object):
     """description of class"""
 
@@ -12,7 +14,7 @@ class NodeScene(object):
         self.initUI()
 
     def initUI(self):
-        self.grScene = NodeGraphicsScene(self)
+        self.grScene = QDMGraphicsScene(self)
         self.grScene.setGrScene(self.scene_width, self.scene_height)
 
     def addNode(self, node):
