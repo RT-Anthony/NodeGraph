@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="QDMGraphicsCutLine.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="QDMGraphicsEdge.py">
       <SubType>Code</SubType>
     </Compile>
