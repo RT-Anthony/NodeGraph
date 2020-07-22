@@ -23,8 +23,8 @@ class NodeScene(object):
     def addEdge(self, edge):
         self.edges.append(edge)
 
-    def removeNode(node):
+    def removeNode(self, node):
         self.nodes.remove(node)
 
-    def removeEdge(edge):
+    def removeEdge(self, edge):
         self.edges.remove(edge)
