@@ -43,7 +43,6 @@ class NodeScene(Serializable):
             data = json.loads(raw_data, encoding='utf-8')
             self.deserialize(data)
 
-
     def serialize(self):
         nodes, edges = [], []
         for node in self.nodes: nodes.append(node.serialize())
