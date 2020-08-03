@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from QDMGraphicsEdge import *
+from QNGGraphicsEdge import *
 from NodeSerializable import Serializable
 
 EDGE_TYPE_DIRECT = 1
@@ -49,11 +49,11 @@ class Edge(Serializable):
 
         self._edge_type = value
         if self.edge_type == EDGE_TYPE_DIRECT:
-            self.grEdge = QDMGraphicsEdgeDirect(self)
+            self.grEdge = QNGGraphicsEdgeDirect(self)
         elif self.edge_type == EDGE_TYPE_BEZIER:
-            self.grEdge = QDMGraphicsEdgeBezier(self)
+            self.grEdge = QNGGraphicsEdgeBezier(self)
         else:
-            self.grEdge = QDMGraphicsEdgeBezier(self)
+            self.grEdge = QNGGraphicsEdgeBezier(self)
 
         self.scene.grScene.addItem(self.grEdge)
 

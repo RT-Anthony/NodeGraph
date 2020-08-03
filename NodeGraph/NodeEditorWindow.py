@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from NodeScene import NodeScene
-from QDMGraphicsView import QDMGraphicsView
+from QNGGraphicsView import QNGGraphicsView
 from Node import Node
 from NodeEdge import Edge, EDGE_TYPE_BEZIER
 
@@ -31,7 +31,7 @@ class NodeEditorWindow(QWidget):
         self.addNodes()
 
         # create graphics view
-        self.view = QDMGraphicsView(self.scene.grScene, self)
+        self.view = QNGGraphicsView(self.scene.grScene, self)
         self.layout.addWidget(self.view)
 
 

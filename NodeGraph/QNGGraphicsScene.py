@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
-class QDMGraphicsScene(QGraphicsScene):
+class QNGGraphicsScene(QGraphicsScene):
     def __init__(self, scene, parent=None):
         super().__init__(parent)
 

@@ -21,13 +21,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="NodeEvent.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NodeEventHistory.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NodeSerializable.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMGraphicsCutLine.py">
+    <Compile Include="QNGGraphicsCutLine.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMGraphicsEdge.py">
+    <Compile Include="QNGGraphicsEdge.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeEdge.py">
@@ -41,19 +47,19 @@
     </Compile>
     <Compile Include="NodeGraph.py" />
     <Compile Include="NodeScene.py" />
-    <Compile Include="QDMGraphicsNode.py">
+    <Compile Include="QNGGraphicsNode.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMGraphicsScene.py">
+    <Compile Include="QNGGraphicsScene.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMGraphicsSocket.py">
+    <Compile Include="QNGGraphicsSocket.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMGraphicsView.py">
+    <Compile Include="QNGGraphicsView.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="QDMNodeContentWidget.py">
+    <Compile Include="QNGNodeContentWidget.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeSocket.py">

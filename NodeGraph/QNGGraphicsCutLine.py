@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
-class QDMGraphicsCutLine(QGraphicsItem):
+class QNGGraphicsCutLine(QGraphicsItem):
     def __init__(self, parent=None):
         super().__init__(parent)
 

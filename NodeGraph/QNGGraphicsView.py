@@ -3,9 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 
-from QDMGraphicsSocket import QDMGraphicsSocket
-from QDMGraphicsEdge import QDMGraphicsEdge
-from QDMGraphicsCutLine import QDMGraphicsCutLine
+from QNGGraphicsSocket import QNGGraphicsSocket
+from QNGGraphicsEdge import QNGGraphicsEdge
+from QNGGraphicsCutLine import QNGGraphicsCutLine
 from NodeEdge import Edge, EDGE_TYPE_BEZIER
 
 
@@ -20,7 +20,7 @@ EDGE_DRAG_START_THRESHOLD = 10
 DEBUG = True
 
 
-class QDMGraphicsView(QGraphicsView):
+class QNGGraphicsView(QGraphicsView):
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.grScene = grScene
@@ -38,7 +38,7 @@ class QDMGraphicsView(QGraphicsView):
         self.zoomStep = 1
         self.zoomRange = [0, 10]
 
-        self.cutline = QDMGraphicsCutLine()
+        self.cutline = QNGGraphicsCutLine()
         self.grScene.addItem(self.cutline)
 
     def initUI(self):
@@ -99,7 +99,7 @@ class QDMGraphicsView(QGraphicsView):
         self.last_lmb_click_scene_pos = self.mapToScene(event.pos())
 
         # logic
-        if hasattr(item, "node") or isinstance(item, QDMGraphicsEdge) or item is None:
+        if hasattr(item, "node") or isinstance(item, QNGGraphicsEdge) or item is None:
             if event.modifiers() & Qt.ShiftModifier:
                 event.ignore()
                 fakeEvent = QMouseEvent(QEvent.MouseButtonPress, event.localPos(), event.screenPos(),
@@ -108,7 +108,7 @@ class QDMGraphicsView(QGraphicsView):
                 super().mousePressEvent(fakeEvent)
                 return
 
-        if type(item) is QDMGraphicsSocket:
+        if type(item) is QNGGraphicsSocket:
             if self.mode == MODE_NOOP:
                 self.mode = MODE_EDGE_DRAG
                 self.edgeDragStart(item)
@@ -135,7 +135,7 @@ class QDMGraphicsView(QGraphicsView):
         item = self.getItemAtClick(event)
 
         # logic
-        if hasattr(item, "node") or isinstance(item, QDMGraphicsEdge) or item is None:
+        if hasattr(item, "node") or isinstance(item, QNGGraphicsEdge) or item is None:
             if event.modifiers() & Qt.ShiftModifier:
                 event.ignore()
                 fakeEvent = QMouseEvent(event.type(), event.localPos(), event.screenPos(),
@@ -167,9 +167,9 @@ class QDMGraphicsView(QGraphicsView):
         item = self.getItemAtClick(event)
 
         if DEBUG:
-            if isinstance(item, QDMGraphicsEdge): print('RMB DEBUG:', item.edge, ' connecting sockets:',
+            if isinstance(item, QNGGraphicsEdge): print('RMB DEBUG:', item.edge, ' connecting sockets:',
                                             item.edge.start_socket, '<-->', item.edge.end_socket)
-            if type(item) is QDMGraphicsSocket: print('RMB DEBUG:', item.socket, 'has edge:', item.socket.edge)
+            if type(item) is QNGGraphicsSocket: print('RMB DEBUG:', item.socket, 'has edge:', item.socket.edge)
 
             if item is None:
                 print('SCENE:')
@@ -222,7 +222,7 @@ class QDMGraphicsView(QGraphicsView):
 
     def deleteSelected(self):
         for item in self.grScene.selectedItems():
-            if isinstance(item, QDMGraphicsEdge):
+            if isinstance(item, QNGGraphicsEdge):
                 item.edge.remove()
             elif hasattr(item, 'node'):
                 item.node.remove()
@@ -255,7 +255,7 @@ class QDMGraphicsView(QGraphicsView):
         """ return True if skip the rest of the code """
         self.mode = MODE_NOOP
 
-        if type(item) is QDMGraphicsSocket:
+        if type(item) is QNGGraphicsSocket:
             if item.socket != self.last_start_socket:
                 if DEBUG: print('View::edgeDragEnd ~   previous edge:', self.previousEdge)
                 if item.socket.hasEdge():

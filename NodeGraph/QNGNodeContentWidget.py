@@ -2,7 +2,7 @@ from collections import OrderedDict
 from NodeSerializable import Serializable
 from PyQt5.QtWidgets import *
 
-class QDMNodeContentWidget(QWidget, Serializable):
+class QNGNodeContentWidget(QWidget, Serializable):
     """description of class"""
     def __init__(self, node, parent=None):
         self.node = node
@@ -17,7 +17,7 @@ class QDMNodeContentWidget(QWidget, Serializable):
 
         self.wdg_label = QLabel("Some Title")
         self.layout.addWidget(self.wdg_label)
-        self.layout.addWidget(QDMTextEdit("foo"))
+        self.layout.addWidget(QNGTextEdit("foo"))
 
     def setEditingFlag(self, value):
         self.node.scene.grScene.views()[0].editingFlag = value # TODO: This is super hacky and should be fixed
@@ -31,7 +31,7 @@ class QDMNodeContentWidget(QWidget, Serializable):
         return False
 
 
-class QDMTextEdit(QTextEdit):
+class QNGTextEdit(QTextEdit):
     
     def focusInEvent(self, event):
         self.parentWidget().setEditingFlag(True)

@@ -10,7 +10,7 @@ from NodeSocket import *
 EDGE_CP_ROUNDNESS = 100
 
 
-class QDMGraphicsEdge(QGraphicsPathItem):
+class QNGGraphicsEdge(QGraphicsPathItem):
     def __init__(self, edge, parent=None):
         super().__init__(parent)
 
@@ -61,14 +61,14 @@ class QDMGraphicsEdge(QGraphicsPathItem):
         raise NotImplemented("This method has to be overriden in a child class")
 
 
-class QDMGraphicsEdgeDirect(QDMGraphicsEdge):
+class QNGGraphicsEdgeDirect(QNGGraphicsEdge):
     def calcPath(self):
         path = QPainterPath(QPointF(self.posSource[0], self.posSource[1]))
         path.lineTo(self.posDestination[0], self.posDestination[1])
         return path
 
 
-class QDMGraphicsEdgeBezier(QDMGraphicsEdge):
+class QNGGraphicsEdgeBezier(QNGGraphicsEdge):
     def calcPath(self):
         s = self.posSource
         d = self.posDestination

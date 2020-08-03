@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 from NodeSerializable import Serializable
-from QDMGraphicsScene import QDMGraphicsScene
+from QNGGraphicsScene import QNGGraphicsScene
 from Node import Node
 from NodeEdge import Edge
 
@@ -20,7 +20,7 @@ class NodeScene(Serializable):
         self.initUI()
 
     def initUI(self):
-        self.grScene = QDMGraphicsScene(self)
+        self.grScene = QNGGraphicsScene(self)
         self.grScene.setGrScene(self.scene_width, self.scene_height)
 
     def addNode(self, node):

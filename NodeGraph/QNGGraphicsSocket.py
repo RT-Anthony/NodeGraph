@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-class QDMGraphicsSocket(QGraphicsItem):
+class QNGGraphicsSocket(QGraphicsItem):
     def __init__(self, socket, socket_type=1):
         self.socket = socket
         super().__init__(socket.node.grNode)

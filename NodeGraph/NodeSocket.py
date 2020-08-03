@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from NodeSerializable import Serializable
-from QDMGraphicsSocket import QDMGraphicsSocket
+from QNGGraphicsSocket import QNGGraphicsSocket
 
 LEFT_TOP = 1
 LEFT_BOTTOM = 2
@@ -20,7 +20,7 @@ class Socket(Serializable):
         if DEBUG: print("Socket -- creating with", self.index, self.position, "for node", self.node)
 
 
-        self.grSocket = QDMGraphicsSocket(self, self.socket_type)
+        self.grSocket = QNGGraphicsSocket(self, self.socket_type)
 
         self.grSocket.setPos(*self.node.getSocketPosition(index, position))
 

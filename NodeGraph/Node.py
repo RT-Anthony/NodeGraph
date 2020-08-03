@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from NodeSerializable import Serializable
-from QDMGraphicsNode import QDMGraphicsNode
-from QDMNodeContentWidget import QDMNodeContentWidget
+from QNGGraphicsNode import QNGGraphicsNode
+from QNGNodeContentWidget import QNGNodeContentWidget
 from NodeSocket import *
 
 DEBUG = False
@@ -13,8 +13,8 @@ class Node(Serializable):
         self._title = title
         self.scene = scene
 
-        self.content = QDMNodeContentWidget(self)
-        self.grNode = QDMGraphicsNode(self)
+        self.content = QNGNodeContentWidget(self)
+        self.grNode = QNGGraphicsNode(self)
         self.title = title
 
         self.scene.addNode(self)
