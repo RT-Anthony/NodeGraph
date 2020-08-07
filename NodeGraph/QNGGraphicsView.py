@@ -21,6 +21,8 @@ DEBUG = True
 
 
 class QNGGraphicsView(QGraphicsView):
+    scenePosChanged = pyqtSignal(int, int)
+
     def __init__(self, grScene, parent=None):
         super().__init__(parent)
         self.grScene = grScene
@@ -194,21 +196,28 @@ class QNGGraphicsView(QGraphicsView):
             self.cutline.line_points.append(pos)
             self.cutline.update()
 
+        self.last_scene_mouse_position = self.mapToScene(event.pos())
+
+        self.scenePosChanged.emit(
+            int(self.last_scene_mouse_position.x()), int(self.last_scene_mouse_position.y())
+        )
+
+
         super().mouseMoveEvent(event)
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Delete:
-            if not self.editingFlag:
-                self.deleteSelected()
-            else:
-                super().keyPressEvent(event)
-        elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.saveToFile("graph.json.txt")
-        elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
-            self.grScene.scene.loadFromFile("graph.json.txt")
+        #if event.key() == Qt.Key_Delete:
+        #    if not self.editingFlag:
+        #        self.deleteSelected()
+        #    else:
+        #        super().keyPressEvent(event)
+        #elif event.key() == Qt.Key_S and event.modifiers() & Qt.ControlModifier:
+        #    self.grScene.scene.saveToFile("graph.json.txt")
+        #elif event.key() == Qt.Key_L and event.modifiers() & Qt.ControlModifier:
+        #    self.grScene.scene.loadFromFile("graph.json.txt")
 
-        else:
-            super().keyPressEvent(event)
+        #else:
+        super().keyPressEvent(event)
 
     def cutIntersectingEdges(self):
         for ix in range(len(self.cutline.line_points) - 1):

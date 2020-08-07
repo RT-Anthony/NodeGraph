@@ -1,91 +1,86 @@
+import os
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from NodeEditorWidget import NodeEditorWidget
 
-from NodeScene import NodeScene
-from QNGGraphicsView import QNGGraphicsView
-from Node import Node
-from NodeEdge import Edge, EDGE_TYPE_BEZIER
 
-class NodeEditorWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-
-        self.stylesheet_filename = 'qss/nodestyle.qss'
-        self.loadStylesheet(self.stylesheet_filename)
+class NodeEditorWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
         self.initUI()
+        self.filename = None
 
+    def createAction(self, name, shortcut, tooltip, callback):
+        action = QAction(name, self)
+        action.setShortcut(shortcut)
+        action.setToolTip(tooltip)
+        action.triggered.connect(callback)
+        return action
 
     def initUI(self):
+        menubar = self.menuBar()
+
+        # menu
+        fileMenu = menubar.addMenu("&File")
+        fileMenu.addAction(self.createAction('&New', 'Ctrl+N', "Create new graph", self.onFileNew))
+        fileMenu.addSeparator()
+        fileMenu.addAction(self.createAction('&Open', 'Ctrl+O', "Open file", self.onFileOpen))
+        fileMenu.addAction(self.createAction('&Save', 'Ctrl+S', "Save file", self.onFileSave))
+        fileMenu.addAction(self.createAction('Save &As...', 'Ctrl+Shift+S', "Save file as...", self.onFileSaveAs))
+        fileMenu.addSeparator()
+        fileMenu.addAction(self.createAction('E&xit', 'Ctrl+Q', "Exit application", self.close))
+
+        editMenu = menubar.addMenu('&Edit')
+        editMenu.addAction(self.createAction('&Undo', 'Ctrl+Z', "Undo last operation", self.onEditUndo))
+        editMenu.addAction(self.createAction('&Redo', 'Ctrl+Shift+Z', "Redo last operation", self.onEditRedo))
+        editMenu.addSeparator()
+        editMenu.addAction(self.createAction('&Delete', 'Del', "Delete selected items", self.onEditDelete))
+
+        # connect node graph
+        nodeEditor = NodeEditorWidget(self)
+        self.setCentralWidget(nodeEditor)
+
+        self.statusBar().showMessage("")
+        self.status_mouse_pos = QLabel("")
+        self.statusBar().addPermanentWidget(self.status_mouse_pos)
+        nodeEditor.view.scenePosChanged.connect(self.onScenePosChanged)
+
         self.setGeometry(200, 200, 800, 600)
-
-        self.layout = QVBoxLayout()
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(self.layout)
-
-        # crate graphics scene
-        self.scene = NodeScene()
-        # self.grScene = self.scene.grScene
-
-        self.addNodes()
-
-        # create graphics view
-        self.view = QNGGraphicsView(self.scene.grScene, self)
-        self.layout.addWidget(self.view)
-
-
         self.setWindowTitle("Node Editor")
         self.show()
 
+    def onScenePosChanged(self, x, y):
+        self.status_mouse_pos.setText("Scene Pos: [%d, %d]" % (x, y))
 
-    def addNodes(self):
-        node1 = Node(self.scene, "My Awesome Node 1", inputs=[0,0,0], outputs=[1])
-        node2 = Node(self.scene, "My Awesome Node 2", inputs=[3,3,3], outputs=[1])
-        node3 = Node(self.scene, "My Awesome Node 3", inputs=[2,2,2], outputs=[1])
-        node1.setPos(-350, -250)
-        node2.setPos(-75, 0)
-        node3.setPos(200, -150)
+    def onFileNew(self):
+        self.centralWidget().scene.clear()
 
-        edge1 = Edge(self.scene, node1.outputs[0], node2.inputs[0], edge_type=EDGE_TYPE_BEZIER)
-        edge2 = Edge(self.scene, node2.outputs[0], node3.inputs[0], edge_type=EDGE_TYPE_BEZIER)
+    def onFileOpen(self):
+        fname, filter = QFileDialog.getOpenFileName(self, 'Open graph from file')
+        if fname == '':
+            return
+        if os.path.isfile(fname):
+            self.centralWidget().scene.loadFromFile(fname)
 
+    def onFileSave(self):
+        if self.filename is None: return self.onFileSaveAs()
+        self.centralWidget().scene.saveToFile(self.filename)
+        self.statusBar().showMessage("Successfully saved %s" % self.filename)
 
-    def addDebugContent(self):
-        greenBrush = QBrush(Qt.green)
-        outlinePen = QPen(Qt.black)
-        outlinePen.setWidth(2)
+    def onFileSaveAs(self):
+        fname, filter = QFileDialog.getSaveFileName(self, 'Save graph to file')
+        if fname == '':
+            return
+        self.filename = fname
+        self.onFileSave()
 
+    def onEditUndo(self):
+        self.centralWidget().scene.history.undo()
 
-        rect = self.grScene.addRect(-100, -100, 80, 100, outlinePen, greenBrush)
-        rect.setFlag(QGraphicsItem.ItemIsMovable)
+    def onEditRedo(self):
+        self.centralWidget().scene.history.redo()
 
-        text = self.grScene.addText("This is my Awesome text!", QFont("Ubuntu"))
-        text.setFlag(QGraphicsItem.ItemIsSelectable)
-        text.setFlag(QGraphicsItem.ItemIsMovable)
-        text.setDefaultTextColor(QColor.fromRgbF(1.0, 1.0, 1.0))
-
-
-        widget1 = QPushButton("Hello World")
-        proxy1 = self.grScene.addWidget(widget1)
-        proxy1.setFlag(QGraphicsItem.ItemIsMovable)
-        proxy1.setPos(0, 30)
-
-
-        widget2 = QTextEdit()
-        proxy2 = self.grScene.addWidget(widget2)
-        proxy2.setFlag(QGraphicsItem.ItemIsSelectable)
-        proxy2.setPos(0, 60)
+    def onEditDelete(self):
+        self.centralWidget().scene.grScene.views()[0].deleteSelected()
 
 
-        line = self.grScene.addLine(-200, -200, 400, -100, outlinePen)
-        line.setFlag(QGraphicsItem.ItemIsMovable)
-        line.setFlag(QGraphicsItem.ItemIsSelectable)
-
-
-    def loadStylesheet(self, filename):
-        print('STYLE loading:', filename)
-        file = QFile(filename)
-        file.open(QFile.ReadOnly | QFile.Text)
-        stylesheet = file.readAll()
-        QApplication.instance().setStyleSheet(str(stylesheet, encoding='utf-8'))
