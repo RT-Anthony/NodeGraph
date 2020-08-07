@@ -9,7 +9,4 @@ if __name__ == '__main__':
 
     window = NodeEditorWindow()
 
-    #label = QLabel("Hello, PyQt5")
-    #label.show()
-
     sys.exit(app.exec_())

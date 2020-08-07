@@ -10,7 +10,8 @@ class EventType(Enum):
 
 class NodeEvent(object):
     """description of class"""
-    def __init__(self, event_type, action_callback, undo_callback):
+    def __init__(self, parent_node, event_type, action_callback, undo_callback):
+        self._parent_node = parent_node
         self._event_type = event_type
         self._action_callback = action_callback
         self._undo_callback = undo_callback

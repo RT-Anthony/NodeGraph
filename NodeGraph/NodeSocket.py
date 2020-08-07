@@ -40,6 +40,9 @@ class Socket(Serializable):
     def setConnectedEdge(self, edge=None):
         self.edge = edge
 
+    def getConnectedEdge(self):
+        return self.edge
+
     def hasEdge(self):
         return self.edge is not None
 
