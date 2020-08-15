@@ -6,7 +6,9 @@ from PyQt5.QtGui import *
 from QNGGraphicsSocket import QNGGraphicsSocket
 from QNGGraphicsEdge import QNGGraphicsEdge
 from QNGGraphicsCutLine import QNGGraphicsCutLine
+from QNGGraphicsScene import QNGGraphicsScene
 from NodeEdge import Edge, EDGE_TYPE_BEZIER
+from Node import Node
 
 
 # TODO: Convert this to an enum at some point
@@ -53,6 +55,17 @@ class QNGGraphicsView(QGraphicsView):
 
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
         self.setDragMode(QGraphicsView.RubberBandDrag)
+
+    def sceneContextMenuEvent(self, event):
+        menu = QMenu(self)
+        new_node = menu.addAction("New Node")
+        new_node.triggered.connect(lambda: self.addNewNode(self.mapToScene(event.pos())))
+        action = menu.exec_(self.mapToGlobal(event.pos()))
+        if action == new_node: print("New Node Selected")
+
+    def addNewNode(self, position):
+        new_node = Node(self.grScene.scene, "New Node", inputs=[2,2,2], outputs=[1])
+        new_node.setPos(position.x(), position.y())
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MiddleButton:
@@ -167,6 +180,9 @@ class QNGGraphicsView(QGraphicsView):
         super().mousePressEvent(event)
 
         item = self.getItemAtClick(event)
+
+        if item is None:
+            self.sceneContextMenuEvent(event)
 
         if DEBUG:
             if isinstance(item, QNGGraphicsEdge): print('RMB DEBUG:', item.edge, ' connecting sockets:',

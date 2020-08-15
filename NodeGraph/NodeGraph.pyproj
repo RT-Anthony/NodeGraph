@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="graph_utils\GraphUtils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NodeEditorWindow.py">
       <SubType>Code</SubType>
     </Compile>
@@ -70,6 +73,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="graph_utils\" />
     <Folder Include="qss\" />
   </ItemGroup>
   <ItemGroup>
