@@ -10,6 +10,7 @@ from QNGGraphicsScene import QNGGraphicsScene
 from NodeEdge import Edge, EDGE_TYPE_BEZIER
 from Node import Node
 
+from node_types import DemoType1
 
 # TODO: Convert this to an enum at some point
 MODE_NOOP = 1
@@ -60,12 +61,23 @@ class QNGGraphicsView(QGraphicsView):
         menu = QMenu(self)
         new_node = menu.addAction("New Node")
         new_node.triggered.connect(lambda: self.addNewNode(self.mapToScene(event.pos())))
+
+        demo_node = menu.addAction("Demo Node")
+        demo_node.triggered.connect(lambda: self.addDemoNode(self.mapToScene(event.pos())))
+
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == new_node: print("New Node Selected")
 
+    # TODO: Move these to event system once I have it figured out #####################
     def addNewNode(self, position):
         new_node = Node(self.grScene.scene, "New Node", inputs=[2,2,2], outputs=[1])
         new_node.setPos(position.x(), position.y())
+
+    def addDemoNode(self, position):
+        new_node = DemoType1.DemoType1(self.grScene.scene)
+        new_node.setPos(position.x(), position.y())
+
+    ###################################################################################
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MiddleButton:

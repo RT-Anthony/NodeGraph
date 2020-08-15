@@ -8,13 +8,16 @@ DEBUG = False
 
 class Node(Serializable):
     """description of class"""
-    def __init__(self, scene, title="Undefined Node", inputs=[], outputs=[]):
+    def __init__(self, scene, title="Undefined Node", inputs=None, outputs=None, content=None, width=180, height=240):
         super().__init__()
         self._title = title
         self.scene = scene
 
-        self.content = QNGNodeContentWidget(self)
-        self.grNode = QNGGraphicsNode(self)
+        if content: 
+            self.content = content
+        else: 
+            self.content = QNGNodeContentWidget(self)
+        self.grNode = QNGGraphicsNode(self, None, width, height)
         self.title = title
 
         self.scene.addNode(self)

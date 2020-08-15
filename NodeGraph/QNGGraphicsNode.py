@@ -4,7 +4,7 @@ from PyQt5.QtGui import *
 
 
 class QNGGraphicsNode(QGraphicsItem):
-    def __init__(self, node, parent=None):
+    def __init__(self, node, parent=None, width=180, height=240):
         super().__init__(parent)
         self.node = node
         self.content = self.node.content
@@ -13,8 +13,8 @@ class QNGGraphicsNode(QGraphicsItem):
         self._title_font = QFont("Ubuntu", 10)
 
 
-        self.width = 180
-        self.height = 240
+        self.width = width
+        self.height = height
         self.edge_size = 10.0
         self.title_height = 24.0
         self._padding = 4.0

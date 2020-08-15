@@ -24,6 +24,9 @@
     <Compile Include="graph_utils\GraphUtils.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="graph_utils\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NodeEditorWindow.py">
       <SubType>Code</SubType>
     </Compile>
@@ -34,6 +37,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodeSerializable.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="node_types\DemoType1.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="node_types\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="QNGGraphicsCutLine.py">
@@ -74,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="graph_utils\" />
+    <Folder Include="node_types\" />
     <Folder Include="qss\" />
   </ItemGroup>
   <ItemGroup>
