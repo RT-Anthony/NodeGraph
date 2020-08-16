@@ -29,16 +29,18 @@ class Node(Serializable):
         self.inputs = []
         self.outputs = []
         counter = 0
-        for item in inputs:
-            socket = Socket(node=self, index=counter, position=LEFT_BOTTOM, socket_type=item)
-            counter += 1
-            self.inputs.append(socket)
+        if inputs is not None:
+            for item in inputs:
+                socket = Socket(node=self, index=counter, position=SocketLocation.INPUT_BOTTOM, socket_color=item)
+                counter += 1
+                self.inputs.append(socket)
 
-        counter = 0
-        for item in outputs:
-            socket = Socket(node=self, index=counter, position=RIGHT_TOP, socket_type=item)
-            counter += 1
-            self.outputs.append(socket)
+        if outputs is not None:
+            counter = 0
+            for item in outputs:
+                socket = Socket(node=self, index=counter, position=SocketLocation.OUTPUT_TOP, socket_color=item)
+                counter += 1
+                self.outputs.append(socket)
 
     def __str__(self):
         return "<Node %s..%s>" % (hex(id(self))[2:5], hex(id(self))[-3:])
@@ -59,9 +61,9 @@ class Node(Serializable):
         self.grNode.title = self._title
 
     def getSocketPosition(self, index, position):
-        x = 0 if (position in (LEFT_TOP, LEFT_BOTTOM)) else self.grNode.width
+        x = 0 if (position in (SocketLocation.INPUT_TOP, SocketLocation.INPUT_BOTTOM)) else self.grNode.width
 
-        if position in (LEFT_BOTTOM, RIGHT_BOTTOM):
+        if position in (SocketLocation.INPUT_BOTTOM, SocketLocation.OUTPUT_BOTTOM):
             # start from bottom
             y = self.grNode.height - self.grNode.edge_size - self.grNode._padding - index * self.socket_spacing
         else :
@@ -118,14 +120,14 @@ class Node(Serializable):
         self.inputs = []
         for socket_data in data['inputs']:
             new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'],
-                                socket_type=socket_data['socket_type'])
+                                socket_color=socket_data['socket_type'])
             new_socket.deserialize(socket_data, hashmap)
             self.inputs.append(new_socket)
 
         self.outputs = []
         for socket_data in data['outputs']:
             new_socket = Socket(node=self, index=socket_data['index'], position=socket_data['position'],
-                                socket_type=socket_data['socket_type'])
+                                socket_color=socket_data['socket_type'])
             new_socket.deserialize(socket_data, hashmap)
             self.outputs.append(new_socket)
         return True

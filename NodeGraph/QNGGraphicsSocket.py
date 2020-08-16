@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 class QNGGraphicsSocket(QGraphicsItem):
-    def __init__(self, socket, socket_type=1):
+    def __init__(self, socket, socket_color=1):
         self.socket = socket
         super().__init__(socket.node.grNode)
 
@@ -17,7 +17,7 @@ class QNGGraphicsSocket(QGraphicsItem):
             QColor("#FFb54747"),
             QColor("#FFdbe220"),
         ]
-        self._color_background = self._colors[socket_type]
+        self._color_background = self._colors[socket_color]
         self._color_outline = QColor("#FF000000")
 
         self._pen = QPen(self._color_outline)

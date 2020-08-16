@@ -81,7 +81,7 @@ class QNGGraphicsEdgeBezier(QNGGraphicsEdge):
 
         sspos = self.edge.start_socket.position
 
-        if (s[0] > d[0] and sspos in (RIGHT_TOP, RIGHT_BOTTOM)) or (s[0] < d[0] and sspos in (LEFT_BOTTOM, LEFT_TOP)):
+        if (s[0] > d[0] and sspos in (SocketLocation.OUTPUT_TOP, SocketLocation.OUTPUT_BOTTOM)) or (s[0] < d[0] and sspos in (SocketLocation.INPUT_BOTTOM, SocketLocation.INPUT_TOP)):
             cpx_d *= -1
             cpx_s *= -1
 

@@ -1,12 +1,14 @@
 from enum import Enum
 
 class EventType(Enum):
-    KEYPRESS   = 0b0000001
-    MOUSECLICK = 0b0000010
-    COPY       = 0b0000100
-    PASTE      = 0b0001000
-    INSERT     = 0b0010000
-    DELETE     = 0b0100000
+    KEYPRESS   = 0b00000001
+    MOUSECLICK = 0b00000010
+    COPY       = 0b00000100
+    PASTE      = 0b00001000
+    INSERT     = 0b00010000
+    DELETE     = 0b00100000
+    UPDATE     = 0b01000000
+    NODE       = 0b10000000
 
 class NodeEvent(object):
     """description of class"""

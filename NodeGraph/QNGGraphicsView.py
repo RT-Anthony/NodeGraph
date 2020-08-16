@@ -7,7 +7,7 @@ from QNGGraphicsSocket import QNGGraphicsSocket
 from QNGGraphicsEdge import QNGGraphicsEdge
 from QNGGraphicsCutLine import QNGGraphicsCutLine
 from QNGGraphicsScene import QNGGraphicsScene
-from NodeEdge import Edge, EDGE_TYPE_BEZIER
+from NodeEdge import Edge, EdgeType
 from Node import Node
 
 from node_types import DemoType1
@@ -206,7 +206,7 @@ class QNGGraphicsView(QGraphicsView):
                 print('  Nodes:')
                 for node in self.grScene.scene.nodes: print('    ', node)
                 print('  Edges:')
-                for edge in self.grScene.scene.edges: print('    ', edge)
+                for edge in self.grScene.scene.edge: print('    ', edge)
 
 
     def rightMouseButtonRelease(self, event):
@@ -252,7 +252,7 @@ class QNGGraphicsView(QGraphicsView):
             p1 = self.cutline.line_points[ix]
             p2 = self.cutline.line_points[ix + 1]
 
-            for edge in self.grScene.scene.edges:
+            for edge in self.grScene.scene.edge:
                 if edge.grEdge.intersectsWith(p1, p2):
                     edge.remove()
 
@@ -284,7 +284,7 @@ class QNGGraphicsView(QGraphicsView):
         if DEBUG: print('View::edgeDragStart ~   assign Start Socket to:', item.socket)
         self.previousEdge = item.socket.edge
         self.last_start_socket = item.socket
-        self.dragEdge = Edge(self.grScene.scene, item.socket, None, EDGE_TYPE_BEZIER)
+        self.dragEdge = Edge(self.grScene.scene, item.socket, None, EdgeType.EDGE_TYPE_BEZIER)
         if DEBUG: print('View::edgeDragStart ~   dragEdge:', self.dragEdge)
 
 

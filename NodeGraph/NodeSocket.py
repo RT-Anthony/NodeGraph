@@ -1,26 +1,36 @@
 from collections import OrderedDict
+from enum import Enum
 from NodeSerializable import Serializable
 from QNGGraphicsSocket import QNGGraphicsSocket
 
-LEFT_TOP = 1
-LEFT_BOTTOM = 2
-RIGHT_TOP = 3
-RIGHT_BOTTOM = 4
+
+class SocketLocation(Enum):
+   INPUT_TOP = 1
+   INPUT_BOTTOM = 2
+   OUTPUT_TOP = 3
+   OUTPUT_BOTTOM = 4
+
+
+class SocketType(Enum):
+    INPUT = 1
+    OUTPUT = 2
+
 
 DEBUG = False
 
+
 class Socket(Serializable):
-    def __init__(self, node, index=0, position=LEFT_TOP, socket_type=1):
+    def __init__(self, node, index=0, position=SocketLocation.INPUT_TOP, socket_color=1, socket_type=SocketType.INPUT):
         super().__init__()
         self.node = node
         self.index = index
         self.position = position
-        self.socket_type = socket_type
+        self.socket_color = socket_color
 
         if DEBUG: print("Socket -- creating with", self.index, self.position, "for node", self.node)
 
 
-        self.grSocket = QNGGraphicsSocket(self, self.socket_type)
+        self.grSocket = QNGGraphicsSocket(self, self.socket_color)
 
         self.grSocket.setPos(*self.node.getSocketPosition(index, position))
 
@@ -51,7 +61,7 @@ class Socket(Serializable):
             ('id', self.id),
             ('index', self.index),
             ('position', self.position),
-            ('socket_type', self.socket_type),
+            ('socket_color', self.socket_color),
         ])
 
     def deserialize(self, data, hashmap={}):

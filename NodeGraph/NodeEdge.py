@@ -1,14 +1,17 @@
 from collections import OrderedDict
+from enum import Enum
 from QNGGraphicsEdge import *
 from NodeSerializable import Serializable
 
-EDGE_TYPE_DIRECT = 1
-EDGE_TYPE_BEZIER = 2
+
+class EdgeType(Enum):
+    EDGE_TYPE_DIRECT = 1
+    EDGE_TYPE_BEZIER = 2
 
 DEBUG = False
 
 class Edge(Serializable):
-    def __init__(self, scene, start_socket=None, end_socket=None, edge_type=EDGE_TYPE_DIRECT):
+    def __init__(self, scene, start_socket=None, end_socket=None, edge_type=EdgeType.EDGE_TYPE_DIRECT):
         super().__init__()
         self.scene = scene
 
@@ -48,9 +51,9 @@ class Edge(Serializable):
             self.scene.grScene.removeItem(self.grEdge)
 
         self._edge_type = value
-        if self.edge_type == EDGE_TYPE_DIRECT:
+        if self.edge_type == EdgeType.EDGE_TYPE_DIRECT:
             self.grEdge = QNGGraphicsEdgeDirect(self)
-        elif self.edge_type == EDGE_TYPE_BEZIER:
+        elif self.edge_type == EdgeType.EDGE_TYPE_BEZIER:
             self.grEdge = QNGGraphicsEdgeBezier(self)
         else:
             self.grEdge = QNGGraphicsEdgeBezier(self)

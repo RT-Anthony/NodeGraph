@@ -12,7 +12,7 @@ class NodeScene(Serializable):
     def __init__(self):
         super().__init__()
         self.nodes = []
-        self.edges = []
+        self.edge = []
 
         self.scene_width = 64000
         self.scene_height = 64000
@@ -27,13 +27,13 @@ class NodeScene(Serializable):
         self.nodes.append(node)
 
     def addEdge(self, edge):
-        self.edges.append(edge)
+        self.edge.append(edge)
 
     def removeNode(self, node):
         self.nodes.remove(node)
 
     def removeEdge(self, edge):
-        self.edges.remove(edge)
+        self.edge.remove(edge)
 
     def clear(self):
         while len(self.nodes) > 0:
@@ -53,7 +53,7 @@ class NodeScene(Serializable):
     def serialize(self):
         nodes, edges = [], []
         for node in self.nodes: nodes.append(node.serialize())
-        for edge in self.edges: edges.append(edge.serialize())
+        for edge in self.edge: edges.append(edge.serialize())
         return OrderedDict([
             ('id', self.id),
             ('scene_width', self.scene_width),

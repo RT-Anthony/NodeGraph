@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from Node import Node
 from NodeSerializable import Serializable
 from PyQt5.QtWidgets import *
