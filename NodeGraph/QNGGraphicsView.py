@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
+from enum import Enum
 
 from QNGGraphicsSocket import QNGGraphicsSocket
 from QNGGraphicsEdge import QNGGraphicsEdge
@@ -13,9 +14,10 @@ from Node import Node
 from node_types import DemoType1
 
 # TODO: Convert this to an enum at some point
-MODE_NOOP = 1
-MODE_EDGE_DRAG = 2
-MODE_EDGE_CUT = 3
+class ModeType(Enum):
+    MODE_NOOP = 1
+    MODE_EDGE_DRAG = 2
+    MODE_EDGE_CUT = 3
 
 EDGE_DRAG_START_THRESHOLD = 10
 
@@ -34,7 +36,7 @@ class QNGGraphicsView(QGraphicsView):
 
         self.setScene(self.grScene)
 
-        self.mode = MODE_NOOP
+        self.mode = ModeType.MODE_NOOP
         self.editingFlag = False
 
         self.zoomInFactor = 1.25
@@ -136,18 +138,18 @@ class QNGGraphicsView(QGraphicsView):
                 return
 
         if type(item) is QNGGraphicsSocket:
-            if self.mode == MODE_NOOP:
-                self.mode = MODE_EDGE_DRAG
+            if self.mode == ModeType.MODE_NOOP:
+                self.mode = ModeType.MODE_EDGE_DRAG
                 self.edgeDragStart(item)
                 return
 
-        if self.mode == MODE_EDGE_DRAG:
+        if self.mode == ModeType.MODE_EDGE_DRAG:
             res = self.edgeDragEnd(item)
             if res: return
 
         if item is None:
             if event.modifiers() & Qt.ControlModifier:
-                self.mode = MODE_EDGE_CUT
+                self.mode = ModeType.MODE_EDGE_CUT
                 fakeEvent = QMouseEvent(QEvent.MouseButtonRelease, event.localPos(), event.screenPos(),
                                         Qt.LeftButton, Qt.NoButton, event.modifiers())
                 super().mouseReleaseEvent(fakeEvent)
@@ -171,17 +173,17 @@ class QNGGraphicsView(QGraphicsView):
                 super().mouseReleaseEvent(fakeEvent)
                 return
 
-        if self.mode == MODE_EDGE_DRAG:
+        if self.mode == ModeType.MODE_EDGE_DRAG:
             if self.distanceBetweenClickAndReleaseIsOff(event):
                 res = self.edgeDragEnd(item)
                 if res: return
         
-        if self.mode == MODE_EDGE_CUT:
+        if self.mode == ModeType.MODE_EDGE_CUT:
             self.cutIntersectingEdges()
             self.cutline.line_points = []
             self.cutline.update()
             QApplication.setOverrideCursor(Qt.ArrowCursor)
-            self.mode = MODE_NOOP
+            self.mode = ModeType.MODE_NOOP
             return
 
         super().mouseReleaseEvent(event)
@@ -214,12 +216,12 @@ class QNGGraphicsView(QGraphicsView):
 
 
     def mouseMoveEvent(self, event):
-        if self.mode == MODE_EDGE_DRAG:
+        if self.mode == ModeType.MODE_EDGE_DRAG:
             pos = self.mapToScene(event.pos())
             self.dragEdge.grEdge.setDestination(pos.x(), pos.y())
             self.dragEdge.grEdge.update()
 
-        if self.mode == MODE_EDGE_CUT:
+        if self.mode == ModeType.MODE_EDGE_CUT:
             pos = self.mapToScene(event.pos())
             self.cutline.line_points.append(pos)
             self.cutline.update()
@@ -290,7 +292,7 @@ class QNGGraphicsView(QGraphicsView):
 
     def edgeDragEnd(self, item):
         """ return True if skip the rest of the code """
-        self.mode = MODE_NOOP
+        self.mode = ModeType.MODE_NOOP
 
         if type(item) is QNGGraphicsSocket:
             if item.socket != self.last_start_socket:
