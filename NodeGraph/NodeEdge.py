@@ -30,8 +30,6 @@ class Edge(Serializable):
     @start_socket.setter
     def start_socket(self, value):
         self._start_socket = value
-        if self.start_socket is not None:
-            self.start_socket.edge = self
 
     @property
     def end_socket(self): return self._end_socket
