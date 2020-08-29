@@ -87,6 +87,7 @@
     <Folder Include="qss\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config.yaml" />
     <Content Include="qss\nodestyle.qss">
       <SubType>Code</SubType>
     </Content>

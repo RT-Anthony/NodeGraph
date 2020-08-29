@@ -37,8 +37,6 @@ class Edge(Serializable):
     @end_socket.setter
     def end_socket(self, value):
         self._end_socket= value
-        if self.end_socket is not None:
-            self.end_socket.edge = self
 
     @property
     def edge_type(self): return self._edge_type
