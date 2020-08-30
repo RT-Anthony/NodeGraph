@@ -4,9 +4,9 @@ from NodeEditorWidget import NodeEditorWidget
 
 
 class NodeEditorWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, config=None):
         super().__init__()
-
+        self._config = config
         self.initUI()
         self.filename = None
 
@@ -45,7 +45,10 @@ class NodeEditorWindow(QMainWindow):
         self.statusBar().addPermanentWidget(self.status_mouse_pos)
         nodeEditor.view.scenePosChanged.connect(self.onScenePosChanged)
 
-        self.setGeometry(200, 200, 800, 600)
+        if self._config:
+            self.setGeometry(200, 200, self._config["default_display"]["width"], self._config["default_display"]["height"])
+        else:
+            self.setGeometry(200, 200, 800, 600)
         self.setWindowTitle("Node Editor")
         self.show()
 

@@ -1,2 +1,7 @@
+default_display:
+    height: 600
+
+    width: 800
+
 node_locations:
     - "node_types"

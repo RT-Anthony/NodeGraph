@@ -10,8 +10,8 @@ if __name__ == '__main__':
 
     with open("config.yaml") as file:
         data = yaml.full_load(file)
-        print(data["node_locations"])
+        print(data)
 
-    window = NodeEditorWindow()
+    window = NodeEditorWindow(data)
 
     sys.exit(app.exec_())
