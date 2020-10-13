@@ -15,12 +15,30 @@ class SocketType(Enum):
     INPUT = 1
     OUTPUT = 2
 
+class SocketColor(Enum):
+    BLUE = 0
+    GREEN = 1
+    ORANGE = 2
+    YELLOW = 3
+    RED = 4
+    PURPLE = 5
+
 
 DEBUG = False
 
+class SocketFactory:
+    @staticmethod
+    def generate(socket_type, node, index=0, 
+                 position=SocketLocation.INPUT_BOTTOM, socket_color=SocketColor.GREEN):
+        if socket_type == SocketType.INPUT:
+            return InputSocket(node, index, position, socket_color)
+        elif socket_type == SocketType.OUTPUT:
+            return OutputSocket(node, index, position, socket_color)
+        else:
+            return Socket(node, index, position, socket_color)
 
 class Socket(Serializable):
-    def __init__(self, node, index=0, position=SocketLocation.INPUT_TOP, socket_color=1, socket_type=SocketType.INPUT):
+    def __init__(self, node, index=0, position=SocketLocation.INPUT_TOP, socket_color=SocketColor.GREEN):
         super().__init__()
         self.node = node
         self.index = index
@@ -36,6 +54,8 @@ class Socket(Serializable):
 
         self.edge = None
 
+        self.edges = []
+
     def __str__(self):
         return "<Socket %s..%s>" % (hex(id(self))[2:5], hex(id(self))[-3:])
 
@@ -45,7 +65,6 @@ class Socket(Serializable):
         res = self.node.getSocketPosition(self.index, self.position)
         if DEBUG: print("  res", res)
         return res
-
 
     def setConnectedEdge(self, edge=None):
         self.edge = edge
@@ -68,3 +87,20 @@ class Socket(Serializable):
         self.id = data['id']
         hashmap[data['id']] = self
         return True
+
+class InputSocket(Socket):
+    pass
+
+
+class OutputSocket(Socket):
+    def addConnectedEdge(self, edge=None):
+        self.edges.append(edge)
+
+    def setConnectedEdge(self, edge=None):
+        self.addConnectedEdge(edge)
+
+    def getConnectedEdges(self):
+        return self.edges
+
+    def hasEdge(self):
+        return len(self.edges) > 0
