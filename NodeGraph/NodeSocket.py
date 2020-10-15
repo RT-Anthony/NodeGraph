@@ -26,17 +26,6 @@ class SocketColor(Enum):
 
 DEBUG = False
 
-class SocketFactory:
-    @staticmethod
-    def generate(socket_type, node, index=0, 
-                 position=SocketLocation.INPUT_BOTTOM, socket_color=SocketColor.GREEN):
-        if socket_type == SocketType.INPUT:
-            return InputSocket(node, index, position, socket_color)
-        elif socket_type == SocketType.OUTPUT:
-            return OutputSocket(node, index, position, socket_color)
-        else:
-            return Socket(node, index, position, socket_color)
-
 class Socket(Serializable):
     def __init__(self, node, index=0, position=SocketLocation.INPUT_TOP, socket_color=SocketColor.GREEN):
         super().__init__()
@@ -93,6 +82,9 @@ class InputSocket(Socket):
 
 
 class OutputSocket(Socket):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def addConnectedEdge(self, edge=None):
         self.edges.append(edge)
 

@@ -31,14 +31,14 @@ class Node(Serializable):
         counter = 0
         if inputs is not None:
             for item in inputs:
-                socket = Socket(node=self, index=counter, position=SocketLocation.INPUT_BOTTOM, socket_color=item)
+                socket = InputSocket(node=self, index=counter, position=SocketLocation.INPUT_BOTTOM, socket_color=item)
                 counter += 1
                 self.inputs.append(socket)
 
         if outputs is not None:
             counter = 0
             for item in outputs:
-                socket = Socket(node=self, index=counter, position=SocketLocation.OUTPUT_TOP, socket_color=item)
+                socket = OutputSocket(node=self, index=counter, position=SocketLocation.OUTPUT_TOP, socket_color=item)
                 counter += 1
                 self.outputs.append(socket)
 
@@ -80,7 +80,8 @@ class Node(Serializable):
 
         for socket in self.outputs:
             if socket.hasEdge():
-                socket.edge.updatePositions()
+                for edge in socket.getConnectedEdges():
+                    edge.updatePositions()
 
 
     def remove(self):
